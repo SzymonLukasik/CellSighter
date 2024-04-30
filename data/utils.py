@@ -5,7 +5,7 @@ import scipy.ndimage as ndimage
 from data.cell_crop import CellCrop
 from PIL import Image
 from skimage import io
-
+import pyometiff
 
 def read_channels(path):
     """
@@ -41,6 +41,9 @@ def load_data(fname) -> np.ndarray:
         image = np.load(fname, allow_pickle=True)['data']
     elif fname.endswith(".tif") or fname.endswith(".tiff"):
         image = io.imread(fname)
+        # image, _, _ = pyometiff.OMETIFFReader(fpath=fname).read()
+        if len(image.shape) == 3:
+          image = np.transpose(image, (1, 2, 0))
     return image
 
 

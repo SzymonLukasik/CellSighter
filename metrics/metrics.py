@@ -47,7 +47,7 @@ class Metrics:
 
 
 class ConfusionMatrixMetric:
-    def __init__(self, mapping=None, labels_name=None, name=None):
+    def __init__(self, mapping=None, labels_name=None, name="ConfusionMatrixMetric"):
         self.mapping = mapping
         self.labels_name = labels_name
         self.name = name
@@ -61,3 +61,15 @@ class ConfusionMatrixMetric:
 
         tb.add_figure(f"{prefix}_{self.name}_cm", fig, epoch)
         return cm
+
+class AccuracyMetric:
+    def __init__(self, name="AccuracyMetric"):
+        self.name = name
+
+    def __call__(self, cells, pred_prob, tb, epoch, prefix):
+        gt_labels = cells["label"]
+        pred = pred_prob.argmax(1)
+        acc = accuracy_score(gt_labels, pred)
+        tb.add_scalar(f"{prefix}_{self.name}_acc", acc, epoch)
+        print(f"Accuracy: {acc}")
+        return acc

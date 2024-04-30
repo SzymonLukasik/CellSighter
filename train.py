@@ -11,14 +11,14 @@ from data.utils import load_crops
 from data.transform import train_transform, val_transform
 from torch.utils.data import DataLoader, WeightedRandomSampler
 import json
-from metrics.metrics import Metrics
+from metrics.metrics import Metrics, ConfusionMatrixMetric, AccuracyMetric
 from eval import val_epoch
-
+from tqdm import tqdm
 
 def train_epoch(model, dataloader, optimizer, criterion, epoch, writer, device=None):
     model.train()
     cells = []
-    for i, batch in enumerate(dataloader):
+    for i, batch in tqdm(enumerate(dataloader)):
         x = batch['image']
         m = batch.get('mask', None)
         if m is not None:
@@ -90,9 +90,9 @@ if __name__ == "__main__":
                                         config["val_set"],
                                         config["to_pad"],
                                         blacklist_channels=config["blacklist"])
-
     train_crops = np.array([c for c in train_crops if c._label >= 0])
     val_crops = np.array([c for c in val_crops if c._label >= 0])
+    print(len(train_crops), len(val_crops))
     if "size_data" in config:
         train_crops = subsample_const_size(train_crops, config["size_data"])
     sampler = define_sampler(train_crops, config["hierarchy_match"])
@@ -122,13 +122,18 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=config["batch_size"],
                             num_workers=config["num_workers"], shuffle=False)
     print(len(train_loader), len(val_loader))
+    # print({k: v.shape for k, v in next(iter(train_loader)).items()})
+    # print({k: v.shape for k, v in next(iter(val_loader)).items()})
     for i in range(config["epoch_max"]):
         train_epoch(model, train_loader, optimizer, criterion, device=device, epoch=i, writer=writer)
         print(f"Epoch {i} done!")
         torch.save(model.state_dict(), os.path.join(args.base_path, f"./weights_{i}_count.pth"))
-        if (i % 10 == 0) & (i > 0):
+        if (i % 1 == 0) & (i > 0):
             cells_val, results_val = val_epoch(model, val_loader, device=device)
-            metrics = Metrics([],
+            metrics = Metrics([
+              ConfusionMatrixMetric(),
+              AccuracyMetric()
+            ],
                               writer,
                               prefix="val")
             metrics(cells_val, results_val, i)
