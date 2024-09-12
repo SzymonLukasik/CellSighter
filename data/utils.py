@@ -114,7 +114,6 @@ def load_samples(images_dir, cells_dir, cells2labels_dir, images_names, crop_siz
                      glob.glob(str(cells_dir / f"{image_id}.tiff"))
         cells2labels_path = glob.glob(str(cells2labels_dir / f"{image_id}.npz")) + \
                             glob.glob(str(cells2labels_dir / f"{image_id}.txt"))
-        print(str(images_dir / f"{image_id}.tiff"))
         image, cells, cl2lbl = load_image(image_path=image_path[0],
                                           cells_path=cells_path[0],
                                           cells2labels_path=cells2labels_path[0],
