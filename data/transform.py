@@ -53,13 +53,15 @@ val_transform = lambda crop_size: torchvision.transforms.Compose([
 ])
 
 train_transform = lambda crop_size, shift: torchvision.transforms.Compose([
-    torchvision.transforms.Lambda(poisson_sampling),
-    torchvision.transforms.Lambda(cell_shape_aug),
-    torchvision.transforms.Lambda(env_shape_aug),
+    # torchvision.transforms.Lambda(poisson_sampling),
+    # torchvision.transforms.Lambda(cell_shape_aug),
+    # torchvision.transforms.Lambda(env_shape_aug),
+    # torchvision.transforms.ToTensor(),
+    # torchvision.transforms.RandomRotation(degrees=(0, 360)),
+    # Lambda(lambda x: ShiftAugmentation(shift_max=shift, n_size=crop_size)(x) if np.random.random() < 0.5 else x),
+    # torchvision.transforms.CenterCrop((crop_size, crop_size)),
+    # torchvision.transforms.RandomHorizontalFlip(p=0.75),
+    # torchvision.transforms.RandomVerticalFlip(p=0.75),
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.RandomRotation(degrees=(0, 360)),
-    Lambda(lambda x: ShiftAugmentation(shift_max=shift, n_size=crop_size)(x) if np.random.random() < 0.5 else x),
-    torchvision.transforms.CenterCrop((crop_size, crop_size)),
-    torchvision.transforms.RandomHorizontalFlip(p=0.75),
-    torchvision.transforms.RandomVerticalFlip(p=0.75),
+    torchvision.transforms.CenterCrop((crop_size, crop_size))
 ])

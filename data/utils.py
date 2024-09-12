@@ -46,6 +46,7 @@ def load_data(fname) -> np.ndarray:
 
 def load_image(image_path, cells_path, cells2labels_path, channels=[], to_pad=False, crop_size=0):
     image = load_data(image_path)
+    image = np.moveaxis(image, [0, 1, 2], [2, 0, 1])
     if len(channels) > 0:
         image = image[..., channels]
     cells = load_data(cells_path).astype(np.int64)

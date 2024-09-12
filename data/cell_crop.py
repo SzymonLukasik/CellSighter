@@ -26,5 +26,4 @@ class CellCrop:
             result['mask'] = (self._cells[self._slices] == self._cell_id).astype(np.float32)
             result['all_cells_mask'] = (self._cells[self._slices] > 0).astype(np.float32)
             result['all_cells_mask_seperate'] = (self._cells[self._slices]).astype(np.float32)
-
         return result

@@ -18,7 +18,12 @@ class CellCropsDataset(Dataset):
     def __getitem__(self, idx):
         sample = self._crops[idx].sample(self._mask)
         aug = self._transform(np.dstack(
-            [sample['image'], sample['all_cells_mask'][:, :, np.newaxis], sample['mask'][:, :, np.newaxis]])).float()
+            [
+              sample['image'],
+              # sample['all_cells_mask'][:, :, np.newaxis],
+              # sample['mask'][:, :, np.newaxis]
+            ]
+        )).float()
         sample['image'] = aug[:-1, :, :]
         sample['mask'] = aug[[-1], :, :]
 

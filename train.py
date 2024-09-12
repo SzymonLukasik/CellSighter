@@ -104,10 +104,10 @@ if __name__ == "__main__":
     val_dataset = CellCropsDataset(val_crops, transform=val_transform(crop_input_size), mask=True)
     train_dataset_for_eval = CellCropsDataset(train_crops, transform=val_transform(crop_input_size), mask=True)
     device = "cuda"
-    num_channels = sum(1 for line in open(config["channels_path"])) + 1 - len(config["blacklist"])
+    num_channels = sum(1 for line in open(config["channels_path"])) - len(config["blacklist"])
     class_num = config["num_classes"]
 
-    model = Model(num_channels + 1, class_num)
+    model = Model(num_channels, class_num)
 
     model = model.to(device=device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"])
