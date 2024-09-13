@@ -13,12 +13,12 @@ from torch.utils.data import DataLoader, WeightedRandomSampler
 import json
 from metrics.metrics import Metrics
 from eval import val_epoch
-
+from tqdm import tqdm
 
 def train_epoch(model, dataloader, optimizer, criterion, epoch, writer, device=None):
     model.train()
     cells = []
-    for i, batch in enumerate(dataloader):
+    for i, batch in tqdm(enumerate(dataloader)):
         x = batch['image']
         m = batch.get('mask', None)
         if m is not None:

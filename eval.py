@@ -13,14 +13,14 @@ from data.transform import val_transform
 from torch.utils.data import DataLoader
 from metrics.metrics import Metrics
 import json
-
+from tqdm import tqdm
 
 def val_epoch(model, dataloader, device=None):
     with torch.no_grad():
         model.eval()
         results = []
         cells = []
-        for i, batch in enumerate(dataloader):
+        for i, batch in tqdm(enumerate(dataloader)):
             x = batch['image']
             m = batch.get('mask', None)
             if m is not None:
@@ -32,8 +32,6 @@ def val_epoch(model, dataloader, device=None):
 
             del batch["image"]
             cells += [batch]
-            if i % 100 == 0:
-                print(f"Eval {i} / {len(dataloader)}")
         return cells, np.array(results)
 
 
