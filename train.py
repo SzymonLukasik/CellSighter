@@ -133,9 +133,6 @@ if __name__ == "__main__":
     print(len(train_loader), len(val_loader))
     val_macro_metrics_path = os.path.join(args.base_path, f"macro_metrics.csv")
     for i in range(config["epoch_max"]):
-        train_epoch(model, train_loader, optimizer, criterion, device=device, epoch=i, writer=writer)
-        print(f"Epoch {i} done!")
-        torch.save(model.state_dict(), os.path.join(args.base_path, f"./weights_{i}_count.pth"))
         if (i % 10 == 0) & (i > 0):
             cells_val, results_val = val_epoch(model, val_loader, device=device)
             metrics = Metrics([],
@@ -152,3 +149,6 @@ if __name__ == "__main__":
             #     prefix="train")
             # metrics(cells_train, results_train, i)
             # metrics.save_results(os.path.join(args.base_path, f"train_results_{i}.csv"), cells_train, results_train)
+        train_epoch(model, train_loader, optimizer, criterion, device=device, epoch=i, writer=writer)
+        print(f"Epoch {i} done!")
+        torch.save(model.state_dict(), os.path.join(args.base_path, f"./weights_{i}_count.pth"))
