@@ -32,7 +32,7 @@ def val_epoch(model, dataloader, device=None):
 
             del batch["image"]
             cells += [batch]
-            if i % 500 == 0:
+            if i % 100 == 0:
                 print(f"Eval {i} / {len(dataloader)}")
         return cells, np.array(results)
 
