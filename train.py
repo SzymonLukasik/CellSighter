@@ -133,7 +133,7 @@ if __name__ == "__main__":
     print(len(train_loader), len(val_loader))
     val_macro_metrics_path = os.path.join(args.base_path, f"macro_metrics.csv")
     for i in range(config["epoch_max"]):
-        if (i % 10 == 0) & (i > 0):
+        if (i % 10 == 0):
             cells_val, results_val = val_epoch(model, val_loader, device=device)
             metrics = Metrics([],
                               writer,
