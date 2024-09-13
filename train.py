@@ -127,6 +127,7 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=config["batch_size"],
                             num_workers=config["num_workers"], shuffle=False)
     print(len(train_loader), len(val_loader))
+    val_macro_metrics_path = os.path.join(args.base_path, f"macro_metrics.csv")
     for i in range(config["epoch_max"]):
         train_epoch(model, train_loader, optimizer, criterion, device=device, epoch=i, writer=writer)
         print(f"Epoch {i} done!")
@@ -137,7 +138,8 @@ if __name__ == "__main__":
                               writer,
                               prefix="val")
             metrics(cells_val, results_val, i)
-            metrics.save_results(os.path.join(args.base_path, f"val_results_{i}.csv"), cells_val, results_val)
+            val_results_path = os.path.join(args.base_path, f"val_results_{i}.csv")
+            metrics.save_results(val_results_path, val_macro_metrics_path, cells_val, results_val)
             #  TODO uncooment to eval on the train as well
             # cells_train, results_train = val_epoch(model, train_loader_for_eval, device=device)
             #  metrics = Metrics(

@@ -37,14 +37,24 @@ class Metrics:
         for m in self.metrics:
             np.save(f"{m.__class__.__name__}", m(cells_crop, pred_prob, self.tb, epoch, self.prefix))
 
-    def save_results(self, path, cells_crop, pred_prob):
+    def save_results(self, path, macro_path, cells_crop, pred_prob):
         cells_crop = self.preprocess_cells(cells_crop)
         cells_crop = pd.DataFrame(cells_crop)
         cells_crop["pred"] = pred_prob.argmax(1)
         cells_crop["pred_prob"] = pred_prob.max(1)
         cells_crop["prob_list"] = pred_prob.tolist()
+
+        macro_metrics = compute_macro_metrics(cells_crop)
+        print(macro_metrics)
+        pd.DataFrame([macro_metrics]).to_csv(macro_path, mode="a")
+
         cells_crop[["pred", "pred_prob", "label", "cell_id", "image_id", "prob_list"]].to_csv(path)
 
+def compute_macro_metrics(results):
+    accuracy = accuracy_score(results["label"], results["pred"])
+    return {
+        "accuracy": accuracy
+    }
 
 class ConfusionMatrixMetric:
     def __init__(self, mapping=None, labels_name=None, name=None):
