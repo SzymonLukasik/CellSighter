@@ -104,6 +104,7 @@ if __name__ == "__main__":
     val_crops = np.array([c for c in val_crops if c._label >= 0])
     if "size_data" in config:
         train_crops = subsample_const_size(train_crops, config["size_data"])
+        val_crops = subsample_const_size(val_crops, config["size_data"])
     sampler = define_sampler(train_crops, config["hierarchy_match"])
     shift = 5
     crop_input_size = config["crop_input_size"] if "crop_input_size" in config else 100
