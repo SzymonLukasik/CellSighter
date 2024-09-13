@@ -44,6 +44,9 @@ def subsample_const_size(crops, size):
     final_crops = []
     crops = np.array(crops)
     labels = np.array([c._label for c in crops])
+    unique_labels = np.unique(labels)
+    class_sample_count = {t: len(np.where(labels == t)[0]) for t in unique_labels}
+    print("class_sample_count before: ", class_sample_count)
     for lbl in np.unique(labels):
         indices = np.argwhere(labels == lbl).flatten()
         if (labels == lbl).sum() < size:
@@ -66,6 +69,7 @@ def define_sampler(crops, hierarchy_match=None):
 
     unique_labels = np.unique(labels)
     class_sample_count = {t: len(np.where(labels == t)[0]) for t in unique_labels}
+    print("class sample count after: ", class_sample_count)
     weight = {k: sum(class_sample_count.values()) / v for k, v in class_sample_count.items()}
     samples_weight = np.array([weight[t] for t in labels])
     samples_weight = torch.from_numpy(samples_weight)
