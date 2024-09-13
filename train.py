@@ -71,8 +71,13 @@ def define_sampler(crops, hierarchy_match=None):
     samples_weight = torch.from_numpy(samples_weight)
     return WeightedRandomSampler(samples_weight.double(), len(samples_weight))
 
+def force_cudnn_initialization():
+    s = 32
+    dev = torch.device('cuda')
+    torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
 
 if __name__ == "__main__":
+    force_cudnn_initialization()
     parser = argparse.ArgumentParser(description='Arguments')
     parser.add_argument('--base_path', type=str,
                         help='configuration_path')
